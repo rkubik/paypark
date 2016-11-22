@@ -1,6 +1,6 @@
-# ParkPlus
+# PayPark
 
-ParkPlus is an open-source Automated Parking System written in Python.
+PayPark is an open-source Automated Parking System written in Python.
 
 ![PayPark Web Interface](/paypark-web.png?raw=true "PayPark Web Interface")
 
