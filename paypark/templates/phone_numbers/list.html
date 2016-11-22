@@ -1,0 +1,36 @@
+{% extends "layout/sidebar_right.html" %}
+{% block body %}
+{% if phone_numbers %}
+<table class="table table-responsive table-striped">
+    <thead>
+        <tr>
+            <th>Phone Number</th>
+            <th>Nickname</th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for phone in phone_numbers %}
+        <tr>
+            <td>{{ phone.number|phone }}</td>
+            <td>{{ phone.nickname or '' }}</td>
+            <td>
+                <div class="btn-group pull-right">
+                    <a href="{{ url_for('phone_numbers.remove', id=phone.id) }}" class="btn btn-confirm btn-xs btn-default">Remove</a>
+                    <a href="{{ url_for('phone_numbers.edit', id=phone.id) }}" class="btn btn-xs btn-primary">Edit</a>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No phone numbers registered. You can add one <a href="{{ url_for('phone_numbers.add') }}">here</a>.</p>
+{% endif %}
+{% endblock %}
+
+
+
+
+
+

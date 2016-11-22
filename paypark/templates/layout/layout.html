@@ -1,0 +1,39 @@
+
+<!doctype html>
+<head>
+    <title>PayPark - {{ page_title }}</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='images/favicon.ico') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap-theme.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+{% include "layout/menu.html" %}
+<div class="container">
+    {% block flash_messages %}
+        {% include "layout/alerts.html" %}
+    {% endblock %}
+    <div class="page-header">
+        <h1>{{ page_title }}{% if page_subtitle %}&nbsp;<small>{{ page_subtitle }}</small>{% endif %}</h1>
+    </div>
+    {% block template %}{% endblock %}
+</div>
+<footer class="footer">
+    <div class="container">
+        <p class="text-muted">© 2016 Russ Kubik All Rights Reserved.</p>
+    </div>
+</footer>
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/moment.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+{% block js %}{% endblock %}
+<script type="text/javascript">
+    $(function() {
+        $('.btn.btn-confirm').click(function() {
+            var warning = $(this).attr('title') ? $(this).attr('title') : 'Are you sure?';
+            return window.confirm(warning);
+        });
+    });
+</script>
+</body>
+</html>

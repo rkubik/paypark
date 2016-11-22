@@ -1,0 +1,11 @@
+{% extends "layout/fullwidth.html" %}
+{% block body %}
+{% from "_pagination.html" import render_pagination %}
+{% from "history/_list.html" import render_history_table %}
+{% if history %}
+{{ render_history_table(history) }}
+{{ render_pagination(pagination) }}
+{% else %}
+<p>No parking history found.</p>
+{% endif %}
+{% endblock %}

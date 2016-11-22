@@ -1,0 +1,37 @@
+<nav class="navbar navbar-default navbar-static-top">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="{{ url_for('dashboard.index') }}">
+                <img alt="Support Scheduler" width="100px" src="{{ url_for('static', filename='images/logo.png') }}">
+            </a>
+        </div>
+        <ul class="nav navbar-nav">
+            {% if auth_user %}
+            <li><a href="{{ url_for('dashboard.index') }}"><span class="glyphicon glyphicon glyphicon-th"></span> Dashboard</a></li>
+            <li><a href="{{ url_for('session.index') }}"><span class="glyphicon glyphicon glyphicon-hourglass"></span> Parking Session</a></li>
+            <li><a href="{{ url_for('history.index') }}"><span class="glyphicon glyphicon glyphicon-align-justify"></span> Parking History</a></li>
+            <li><a href="{{ url_for('phone_numbers.index') }}"><span class="glyphicon glyphicon glyphicon-phone"></span> Phone Numbers</a></li>
+            <li><a href="{{ url_for('license_plates.index') }}"><span class="glyphicon glyphicon glyphicon-road"></span> License Plates</a></li>
+            {% endif %}
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            {% if not auth_user %}
+            <li><a href="{{ url_for('auth.login') }}"><span class="glyphicon glyphicon glyphicon glyphicon-log-in"></span> Login</a></li>
+            <li><a href="{{ url_for('auth.register') }}"><span class="glyphicon glyphicon glyphicon glyphicon-edit"></span> Register</a></li>
+            {% endif %}
+            {% if auth_user %}
+            {% if num_license_plates == 0 %}
+                 <li><a title="No license plates registered" href="{{ url_for('license_plates.add') }}"><span class="glyphicon glyphicon-exclamation-sign"></span></a></li>
+            {% endif %}
+            {% if num_phone_numbers == 0 %}
+                 <li><a title="No phone numbers registered" href="{{ url_for('phone_numbers.add') }}"><span class="glyphicon glyphicon-exclamation-sign"></span></a></li>
+            {% endif %}
+            {% if auth_user.balance <= 0 %}
+                 <li><a title="Account balance is empty" href="{{ url_for('account.add_funds') }}"><span class="glyphicon glyphicon-exclamation-sign"></span></a></li>
+            {% endif %}
+            <li><a href="{{ url_for('account.index') }}"><span class="glyphicon glyphicon glyphicon glyphicon-user"></span> My Account</a></li>
+            <li><a href="{{ url_for('auth.logout') }}"><span class="glyphicon glyphicon glyphicon glyphicon-log-out"></span> Logout</a></li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>

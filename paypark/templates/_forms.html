@@ -1,0 +1,62 @@
+{% macro render_field(field, class_='form-control', placeholder='') %}
+{{ field(class=class_, placeholder=placeholder) }}
+{% endmacro %}
+
+{% macro render_field_errors(field, feedback=False) %}
+{% if field.errors %}
+{% if feedback %}
+<span class="glyphicon glyphicon-remove-sign form-control-feedback" aria-hidden="true"></span>
+{% endif %}
+{% for error in field.errors %}
+{% if error %}
+<span class="label label-danger">{{ error }}</span>
+{% endif %}
+{% endfor %}
+{% endif %}
+{% endmacro %}
+
+{% macro render_field_help(message=None) %}
+{% if message %}
+<p class="help-block">{{ message }}</p>
+{% endif %}
+{% endmacro %}
+
+{% macro render_field_label(field) %}
+{{ field.label }}
+{% endmacro %}
+
+{% macro render_field_group(field, class_='form-control', feedback=True, dimensions=(2,10)) %}
+{% if field.widget.input_type == 'hidden' %}
+    {{ render_field(field, class_) }}
+{% else %}
+<div class="form-group{% if field.errors and feedback %} has-error has-feedback{% endif %}">
+    <label class="col-sm-{{ dimensions[0] }} control-label">{{ render_field_label(field) }}</label>
+    <div class="col-sm-{{ dimensions[1] }}">
+        {{ render_field(field, class_) }}
+        {{ render_field_errors(field, feedback) }}
+        {{ render_field_help(field.description) }}
+    </div>
+</div>
+{% endif %}
+{% endmacro %}
+
+{% macro render_fields(fields, dimensions) %}
+{% for field in fields %}
+{{ render_field_group(field, dimensions=dimensions) }}
+{% endfor %}
+{% endmacro %}
+
+{% macro render_form(form, method='post', class_='form-horizontal', btn_val='Submit', dimensions=(3,9)) %}
+<form method="{{ method }}" class="{{ class_ }}">
+    {{ render_fields(form, dimensions) }}
+    <div class="form-group actions">
+        <div class="col-sm-offset-{{ dimensions[0] }} col-sm-{{ dimensions[1] }}">
+            <div class="btn-group" role="group">
+                <button type="submit" class="btn btn-sm btn-primary">
+                    {{ btn_val }}
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+{% endmacro %}

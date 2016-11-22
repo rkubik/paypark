@@ -1,0 +1,36 @@
+{% extends "layout/sidebar_right.html" %}
+{% block body %}
+{% if license_plates %}
+<table class="table table-responsive table-striped">
+    <thead>
+        <tr>
+            <th>Plate Number</th>
+            <th>Region</th>
+            <th>&nbsp;</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for plate in license_plates %}
+        <tr>
+            <td>{{ plate.number }}</td>
+            <td>{{ plate.region }}</td>
+            <td>
+                <div class="btn-group pull-right">
+                    <a href="{{ url_for('license_plates.remove', id=plate.id) }}" class="btn btn-confirm btn-xs btn-default">Remove</a>
+                    <a href="{{ url_for('license_plates.edit', id=plate.id) }}" class="btn btn-xs btn-primary">Edit</a>
+                </div>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No license plates registered. You can add one <a href="{{ url_for('license_plates.add') }}">here</a>.</p>
+{% endif %}
+{% endblock %}
+
+
+
+
+
+

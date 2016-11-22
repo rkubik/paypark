@@ -1,0 +1,5 @@
+{% extends "layout/fullwidth.html" %}
+{% block body %}
+{% from "_forms.html" import render_form %}
+{{ render_form(form, btn_val='Register') }}
+{% endblock %}

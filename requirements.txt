@@ -1,0 +1,10 @@
+configobj
+flask
+flask_login
+pycountry
+sqlalchemy
+wtforms
+werkzeug
+phonenumbers
+redis
+rq_scheduler

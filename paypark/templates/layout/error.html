@@ -1,0 +1,7 @@
+{% extends "layout/layout.html" %}
+{% block body %}
+<p>There was a problem processing your request.</p>
+<div class="alert alert-danger" role="alert">
+    <strong>{{ code }}</strong> - {{ error }}
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "layout/fullwidth.html" %}
+{% block template %}
+<div class="row">
+    <div class="col-md-8">
+        {% block body %}{% endblock %}
+    </div>
+    <div class="col-md-4">
+        {% for group in sidebar_groups %}
+        <div class="list-group">
+            {% for link in group %}
+            <a href="{{ url_for(link['url']) }}" class="list-group-item">
+            {% if 'icon' in link %}
+                <span class="glyphicon glyphicon-{{ link['icon'] }}"></span>&nbsp;
+            {% endif %}
+                {{ link['name'] }}
+            </a>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,5 @@
+{% extends "layout/sidebar_right.html" %}
+{% block body %}
+{% from "_forms.html" import render_form %}
+{{ render_form(form, btn_val='Start') }}
+{% endblock %}

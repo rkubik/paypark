@@ -1,0 +1,9 @@
+{% extends "layout/sidebar_right.html" %}
+{% block body %}
+{% if current_sessions %}
+{% from "session/_list.html" import render_session_table %}
+{{ render_session_table(current_sessions) }}
+{% else %}
+<p>No parking sessions in effect.</p>
+{% endif %}
+{% endblock %}

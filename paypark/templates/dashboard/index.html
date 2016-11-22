@@ -1,0 +1,116 @@
+{% extends "layout/fullwidth.html" %}
+{% block body %}
+<div class="row">
+<div class="col-md-6">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-xs-3">
+                    <span class="glyphicon glyphicon-credit-card gi-6x"></span>
+                </div>
+                <div class="col-xs-9 text-right">
+                    <div class="medium">Account Balance</div>
+                    <div class="huge">${{ auth_user.balance|currency }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <span class="pull-left">
+            </span>
+            <span class="pull-right">
+                <div class="btn-group" role="group">
+                <a href="{{ url_for('account.index') }}" class="btn btn-default btn-xs">My Account</a>
+                <a href="{{ url_for('account.add_funds') }}" class="btn btn-default btn-xs">Add Funds</a>
+                </div>
+            </span>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<div class="col-md-6">
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-xs-3">
+                    <span class="glyphicon glyphicon-phone gi-6x"></span>
+                </div>
+                <div class="col-xs-9 text-right">
+                    <div class="medium">Phone Numbers</div>
+                    <div class="huge">{{ num_phone_numbers }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <span class="pull-left">
+            </span>
+            <span class="pull-right">
+                <div class="btn-group" role="group">
+                <a href="{{ url_for('phone_numbers.index') }}" class="btn btn-default btn-xs">View All</a>
+                <a href="{{ url_for('phone_numbers.add') }}" class="btn btn-default btn-xs">Add New</a>
+                </div>
+            </span>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<div class="col-md-6">
+    <div class="panel panel-warning">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-xs-3">
+                    <span class="glyphicon glyphicon-road gi-6x"></span>
+                </div>
+                <div class="col-xs-9 text-right">
+                    <div class="medium">License Plates</div>
+                    <div class="huge">{{ num_license_plates }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <span class="pull-left">
+            </span>
+            <span class="pull-right">
+                <div class="btn-group" role="group">
+                <a href="{{ url_for('license_plates.index') }}" class="btn btn-default btn-xs">View All</a>
+                <a href="{{ url_for('license_plates.add') }}" class="btn btn-default btn-xs">Add New</a>
+                </div>
+            </span>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<div class="col-md-6">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-xs-3">
+                    <span class="glyphicon glyphicon-hourglass gi-6x"></span>
+                </div>
+                <div class="col-xs-9 text-right">
+                    <div class="medium">Parking Sessions</div>
+                    <div class="huge">{{ current_sessions|count }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="panel-footer">
+            <span class="pull-left">
+            </span>
+            <span class="pull-right">
+                <div class="btn-group" role="group">
+                <a href="{{ url_for('session.index') }}" class="btn btn-default btn-xs">View All</a>
+                <a href="{{ url_for('session.start') }}" class="btn btn-default btn-xs">Start</a>
+                </div>
+            </span>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+</div>
+{% if current_sessions %}
+{% from "session/_list.html" import render_session_table %}
+<div class="page-header">
+    <h2>Current Parking Sessions</h2>
+</div>
+{{ render_session_table(current_sessions) }}
+{% endif %}
+{% endblock %}
