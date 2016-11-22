@@ -1,6 +1,6 @@
 # ParkPlus
 
-ParkPlug is an open-source Automated Parking System written in Python.
+ParkPlus is an open-source Automated Parking System written in Python.
 
 ## Setup
 
@@ -90,10 +90,6 @@ Make sure you enter a value for `MessagingServiceSid` in the config file.
 In the web portal login as the demo user and add a phone number.
 
     curl --form 'Body=start 1000' --form 'From=12345678901' --form 'MessagingServiceSid=12345' localhost:9000
-    {
-        "error": "Missing: MessagingServiceSid"
-    }
-
     <?xml version="1.0" encoding="UTF-8"?><Response><Message>Parking is free.</Message></Response>
 
 ## SMS API Services
