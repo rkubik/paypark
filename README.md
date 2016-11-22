@@ -2,6 +2,8 @@
 
 ParkPlus is an open-source Automated Parking System written in Python.
 
+![PayPark Web Interface](/paypark-web.png?raw=true "PayPark Web Interface")
+
 ## Setup
 
 Debian packaging will be the preferred way of deployment. Until that is setup
