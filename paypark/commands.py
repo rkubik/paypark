@@ -9,7 +9,6 @@ from .models import PhoneNumber, Zone, ParkingSession, ZoneSchedule
 from .exceptions import PayParkError
 from .format import format_currency
 from .session import current_session_by_phone, start_session, stop_session
-from .tasks import topup_task
 from .scheduler import scheduler
 
 logger = logging.getLogger(__name__)

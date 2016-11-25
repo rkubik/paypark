@@ -7,7 +7,6 @@ from ..format import format_phone_number
 from ..session import current_sessions_by_user, stop_session, start_session
 from ..forms import ParkingSessionForm
 from ..models import Zone, PhoneNumber
-from ..tasks import topup_task
 from ..scheduler import scheduler
 
 

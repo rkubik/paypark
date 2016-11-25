@@ -12,54 +12,12 @@ Debian packaging will be the preferred way of deployment. Until that is setup
 ### Dependencies
 
     sudo apt-get install python-pip
-    sudo pip install
+    sudo pip install -r requirements.txt
 
 ### Configuration
 
-In the root directory of the project create a file `paypark.ini`:
-
-    SECRET_KEY=''
-    TIMEZONE='American/Edmonton'
-    LOCALE='en_US.utf8'
-    COUNTRY_CODE='CA'
-    CURRENCY_CODE='CAD'
-    CURRENCY_SYMBOL='$'
-    ACCOUNT_TOP_UP='500,1000,2000,3000,5000'
-
-    SMS_SERVICE='twilio'
-    TWILIO_NUMBER=''
-    TWILIO_HOST='0.0.0.0'
-    TWILIO_PORT=9000
-    TWILIO_MSSID=''
-    TWILIO_SID=''
-    TWILIO_AUTH_TOKEN=''
-    BULKSMS_EAPIURL=''
-    BULKSMS_USERNAME=''
-    BULKSMS_PASSWORD=''
-    BULKSMS_HOST='0.0.0.0'
-    BULKSMS_PORT=9000
-    BULKSMS_MSISDN=''
-
-    LICENSE_PLATE_MAX=5
-    LICENSE_PLATE_PER_PAGE=10
-    LICENSE_PLATE_REGEX='^[A-Z]{3}[0-9]{3}$'
-    LICENSE_PLATE_HELP='Enter without spaces or hyphens (Example: AAA123)'
-
-    PHONE_NUMBER_MAX=3
-    PHONE_NUMBER_PER_PAGE=10
-    PHONE_NUMBER_REGEX='^[0-9]{11}$'
-    PHONE_NUMBER_HELP='Phone number with country code (Example: 12345678901)'
-
-    HISTORY_PER_PAGE=10
-
-    PAYMENT_SERVICE='stripe'
-    STRIPE_API_KEY=''
-
-    MAIL_SERVER='localhost'
-    MAIL_USERNAME=''
-    MAIL_PASSWORD=''
-    MAIL_FROM_EMAIL='info@paypark.com'
-    MAIL_FROM_NAME='PayPark Automated System'
+In the root directory of the project copy `paypark.ini.example` to `paypark.ini`
+and set the `SECRET_KEY`.
 
 ### Running
 
