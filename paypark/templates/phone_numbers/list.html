@@ -16,8 +16,8 @@
             <td>{{ phone.nickname or '' }}</td>
             <td>
                 <div class="btn-group pull-right">
-                    <a href="{{ url_for('phone_numbers.remove', id=phone.id) }}" class="btn btn-confirm btn-xs btn-default">Remove</a>
-                    <a href="{{ url_for('phone_numbers.edit', id=phone.id) }}" class="btn btn-xs btn-primary">Edit</a>
+                    <a href="{{ url_for('frontend.phone_numbers_remove', id=phone.id) }}" class="btn btn-confirm btn-xs btn-default">Remove</a>
+                    <a href="{{ url_for('frontend.phone_numbers_edit', id=phone.id) }}" class="btn btn-xs btn-primary">Edit</a>
                 </div>
             </td>
         </tr>
@@ -25,7 +25,7 @@
     </tbody>
 </table>
 {% else %}
-<p>No phone numbers registered. You can add one <a href="{{ url_for('phone_numbers.add') }}">here</a>.</p>
+<p>No phone numbers registered. You can add one <a href="{{ url_for('frontend.phone_numbers_add') }}">here</a>.</p>
 {% endif %}
 {% endblock %}
 

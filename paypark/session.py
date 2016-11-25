@@ -48,6 +48,15 @@ def current_sessions_by_user(user_id, date_now=None):
     return _current_sessions_by_user(user_id, date_now).all()
 
 
+def expired_sessions(date_now=None):
+    if not date_now:
+        date_now = datetime.now()
+    return ParkingSession.query.filter(and_(
+        ParkingSession.date_expiry<date_now,
+        ParkingSession.date_end==None,
+    )).order_by(ParkingSession.date_start.desc())
+
+
 def start_session(phone_number, zone):
     date_now = datetime.now()
     if current_session_by_phone(phone_number.id, date_now=date_now):
@@ -107,8 +116,9 @@ def stop_session(phone_number, zone=None):
 
 
 def session_payment(session, user):
+    date_end = session.date_end if session.date_end else session.date_expiry
     session.duration_min = int((
-        session.date_end-
+        date_end-
         session.date_start
     ).total_seconds()/60)
     session.amount_paid = (

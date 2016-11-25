@@ -2,7 +2,7 @@
 
 PayPark is an open-source Automated Parking System written in Python.
 
-![PayPark Web Interface](/paypark-web.png?raw=true "PayPark Web Interface")
+![PayPark Web Interface](/screenshots/paypark-dashboard.png?raw=true "PayPark Web Interface")
 
 ## Setup
 
@@ -33,6 +33,12 @@ In the root directory of the project create a file `paypark.ini`:
     TWILIO_MSSID=''
     TWILIO_SID=''
     TWILIO_AUTH_TOKEN=''
+    BULKSMS_EAPIURL=''
+    BULKSMS_USERNAME=''
+    BULKSMS_PASSWORD=''
+    BULKSMS_HOST='0.0.0.0'
+    BULKSMS_PORT=9000
+    BULKSMS_MSISDN=''
 
     LICENSE_PLATE_MAX=5
     LICENSE_PLATE_PER_PAGE=10
@@ -96,7 +102,8 @@ In the web portal login as the demo user and add a phone number.
 
 ## SMS API Services
 
-PayPark is configured to support different SMS API services. Currently PayPark supports:
+PayPark is configured to support different SMS API services to send and
+receive SMS messages:
 
 - Twilio
-
+- BulkSMS

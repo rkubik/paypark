@@ -16,8 +16,8 @@
             <td>{{ plate.region }}</td>
             <td>
                 <div class="btn-group pull-right">
-                    <a href="{{ url_for('license_plates.remove', id=plate.id) }}" class="btn btn-confirm btn-xs btn-default">Remove</a>
-                    <a href="{{ url_for('license_plates.edit', id=plate.id) }}" class="btn btn-xs btn-primary">Edit</a>
+                    <a href="{{ url_for('frontend.license_plates_remove', id=plate.id) }}" class="btn btn-confirm btn-xs btn-default">Remove</a>
+                    <a href="{{ url_for('frontend.license_plates_edit', id=plate.id) }}" class="btn btn-xs btn-primary">Edit</a>
                 </div>
             </td>
         </tr>
@@ -25,7 +25,7 @@
     </tbody>
 </table>
 {% else %}
-<p>No license plates registered. You can add one <a href="{{ url_for('license_plates.add') }}">here</a>.</p>
+<p>No license plates registered. You can add one <a href="{{ url_for('frontend.license_plates_add') }}">here</a>.</p>
 {% endif %}
 {% endblock %}
 

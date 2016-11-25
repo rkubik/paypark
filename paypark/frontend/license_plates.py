@@ -2,42 +2,40 @@
 from flask import Blueprint, render_template, flash, request, redirect, url_for, current_app, Markup
 from flask_login import current_user, login_required
 
+from . import frontend
 from ..models import LicensePlate
 from ..database import db_session
 from ..forms import AddLicensePlateForm
 from ..pagination import Pagination
 
 
-license_plates = Blueprint('license_plates', __name__, url_prefix='/license_plates')
 sidebar_groups = [
     [{
-        'url': 'license_plates.index',
+        'url': 'frontend.license_plates_index',
         'name': 'License Plates',
         'icon': 'road',
     }, {
-        'url': 'license_plates.add',
+        'url': 'frontend.license_plates_add',
         'name': 'Add License Plate',
         'icon': 'plus',
     }]
 ]
 
 
-@license_plates.route('/', defaults={'page': 1}, methods=['GET'])
-@license_plates.route('/page/<int:page>', methods=['GET'])
+@frontend.route('/license_plates', defaults={'page': 1}, methods=['GET'])
+@frontend.route('/license_plates/page/<int:page>', methods=['GET'])
 @login_required
-def index(page):
+def license_plates_index(page):
     if page < 1:
         page = 1
     per_page = current_app.config.get('LICENSE_PLATE_PER_PAGE', 10)
-    total = LicensePlate.query.filter(
-        LicensePlate.user_id==current_user.id
-    ).count()
     plates = LicensePlate.query.filter(
         LicensePlate.user_id==current_user.id
     ).all()
-    if len(plates) == 0:
-        flash(Markup('You have no license plates registered. Click <a href="%s">here</a> to add one!' % url_for('license_plates.add')), 'danger')
-    pagination = Pagination(page, per_page, total, 'license_plates.index')
+    total = len(plates)
+    if total == 0:
+        flash(Markup('You have no license plates registered. Click <a href="%s">here</a> to add one!' % url_for('frontend.license_plates_add')), 'danger')
+    pagination = Pagination(page, per_page, total, 'frontend.license_plates_index')
     return render_template('license_plates/list.html',
         page_title='License Plates',
         page_subtitle='(%d/%d)' % (page, pagination.pages),
@@ -47,9 +45,9 @@ def index(page):
     )
 
 
-@license_plates.route('/remove/<int:id>', methods=['GET'])
+@frontend.route('/license_plates/remove/<int:id>', methods=['GET'])
 @login_required
-def remove(id):
+def license_plates_remove(id):
     license_plate = LicensePlate.query.filter(
         LicensePlate.id==id,
         LicensePlate.user_id==current_user.id,
@@ -60,12 +58,12 @@ def remove(id):
         db_session.commit()
     else:
         flash('License plate not found!', 'danger')
-    return redirect(url_for('license_plates.index'))
+    return redirect(url_for('frontend.license_plates_index'))
 
 
-@license_plates.route('/add', methods=['GET', 'POST'])
+@frontend.route('/license_plates/add', methods=['GET', 'POST'])
 @login_required
-def add():
+def license_plates_add():
     form = AddLicensePlateForm(
         current_user.id,
         current_app.config.get('LICENSE_PLATE_MAX'),
@@ -82,7 +80,7 @@ def add():
         db_session.add(license_plate)
         db_session.commit()
         flash('Added license plate %s!' % license_plate.number, 'info')
-        return redirect(url_for('license_plates.add'))
+        return redirect(url_for('frontend.license_plates_add'))
     return render_template('license_plates/add.html',
         page_title='Add License Plate',
         form=form,
@@ -90,16 +88,16 @@ def add():
     )
 
 
-@license_plates.route('/edit/<int:id>', methods=['GET', 'POST'])
+@frontend.route('/license_plates/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
-def edit(id):
+def license_plates_edit(id):
     license_plate = LicensePlate.query.filter(
         LicensePlate.user_id==current_user.id,
         LicensePlate.id==id
     ).first()
     if not license_plate:
         flash('License plate not found!', 'danger')
-        return redirect(url_for('license_plates.index'))
+        return redirect(url_for('frontend.license_plates_index'))
     form = AddLicensePlateForm(
         current_user.id,
         current_app.config.get('LICENSE_PLATE_MAX'),
@@ -114,7 +112,7 @@ def edit(id):
         db_session.add(license_plate)
         db_session.commit()
         flash('License plate settings saved', 'info')
-        return redirect(url_for('license_plates.edit', id=id))
+        return redirect(url_for('frontend.license_plates_edit', id=id))
     return render_template('license_plates/edit.html',
         page_title='Edit License Plate',
         form=form,

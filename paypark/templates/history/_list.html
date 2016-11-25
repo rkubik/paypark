@@ -13,8 +13,8 @@
     <tbody>
         {% for h in history %}
         <tr>
-            <td>{{ h.date_start|date('%Y-%m-%d %H:%M') }}</td>
-            <td>{{ h.date_end|date('%Y-%m-%d %H:%M') }}</td>
+            <td>{{ h.date_start|date }}</td>
+            <td>{{ h.date_end|date }}</td>
             <td class="center">{{ h.zone.name }}</td>
             <td class="center">{{ config.CURRENCY_SYMBOL }}{{ h.amount_paid|currency }}</td>
             <td class="center">{{ h.duration_min }}</td>

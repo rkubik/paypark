@@ -2,30 +2,21 @@
 from flask import Flask, url_for, redirect
 from flask_login import LoginManager, current_user
 import locale
-from redis import Redis
-from rq_scheduler import Scheduler
 
-from .views.dashboard import dashboard
-from .views.history import history
-from .views.license_plates import license_plates
-from .views.phone_numbers import phone_numbers
-from .views.account import account
-from .views.auth import auth
-from .views.session import session
-from .database import db_session
+from .api import api as api_blueprint
+from .frontend import frontend as frontend_blueprint
+from .database import db_session, init_engine
 from .models import User, PhoneNumber, LicensePlate
 from .format import format_currency, format_phone_number
 
 
 app = Flask(__name__)
 app.config.from_pyfile('../paypark.ini')
-app.register_blueprint(dashboard)
-app.register_blueprint(history)
-app.register_blueprint(license_plates)
-app.register_blueprint(phone_numbers)
-app.register_blueprint(account)
-app.register_blueprint(auth)
-app.register_blueprint(session)
+app.url_map.strict_slashes = False
+app.register_blueprint(api_blueprint)
+app.register_blueprint(frontend_blueprint)
+
+init_engine(app.config.get('DATABASE_URI'))
 
 try:
     locale.setlocale(locale.LC_ALL, app.config.get('LOCALE'))
@@ -33,8 +24,6 @@ except locale.Error, e:
     pass
 login_manager = LoginManager()
 login_manager.init_app(app)
-
-scheduler = Scheduler(connection=Redis())
 
 
 @login_manager.user_loader
@@ -44,7 +33,7 @@ def load_user(id):
 
 @login_manager.unauthorized_handler
 def unauthorized_callback():
-    return redirect(url_for('auth.login'))
+    return redirect(url_for('frontend.auth_login'))
 
 
 @app.teardown_appcontext
@@ -77,7 +66,7 @@ def currency(arg):
 
 
 @app.template_filter('date')
-def date(arg, fmt='%Y-%m-%d'):
+def date(arg, fmt='%Y-%m-%d %H:%M'):
     return arg.strftime(fmt)
 
 

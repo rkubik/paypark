@@ -2,36 +2,38 @@
 from flask import Blueprint, render_template, flash, Markup, url_for, current_app, request
 from flask_login import login_required, current_user
 
+from . import frontend
 from ..forms import ChangePasswordForm, UserSettingsForm
 from ..format import format_currency
 from ..database import db_session
 
 
-account = Blueprint('account', __name__,  url_prefix='/account')
 sidebar_groups = [
     [{
-        'url': 'account.index',
+        'url': 'frontend.account_index',
         'name': 'My Account',
         'icon': 'user',
     }, {
-        'url': 'account.settings',
+        'url': 'frontend.account_settings',
         'name': 'Settings',
         'icon': 'cog',
     }, {
-        'url': 'account.change_password',
+        'url': 'frontend.account_change_password',
         'name': 'Change Password',
         'icon': 'option-horizontal',
     }, {
-        'url': 'account.add_funds',
+        'url': 'frontend.account_add_funds',
         'name': 'Add Funds',
         'icon': 'credit-card',
     }]
 ]
 
 
-@account.route('/', methods=['GET'])
+@frontend.route('/account', methods=['GET'])
 @login_required
-def index():
+def account_index():
+    if current_user.balance <= 0:
+        flash(Markup('Your account balance is 0. Click <a href="%s">here</a> to top up!' % url_for('account.add_funds')), 'danger')
     return render_template('account/index.html',
         page_title='My Account',
         page_subtitle='Current Balance $%s' % format_currency(current_user.balance),
@@ -39,9 +41,9 @@ def index():
     )
 
 
-@account.route('/settings', methods=['GET', 'POST'])
+@frontend.route('/account/settings', methods=['GET', 'POST'])
 @login_required
-def settings():
+def account_settings():
     form = UserSettingsForm(
         [(int(x),'%s%s' % (current_app.config.get('CURRENCY_SYMBOL'), format_currency(x))) for x in current_app.config.get('ACCOUNT_TOP_UP').split(',')],
         obj=current_user,
@@ -57,9 +59,9 @@ def settings():
     )
 
 
-@account.route('/change_password', methods=['GET', 'POST'])
+@frontend.route('/account/change_password', methods=['GET', 'POST'])
 @login_required
-def change_password():
+def account_change_password():
     form = ChangePasswordForm()
     if form.validate_on_submit():
         current_user.change_password(form.new_password.data)
@@ -72,11 +74,9 @@ def change_password():
     )
 
 
-@account.route('/add_funds', methods=['GET', 'POST'])
+@frontend.route('/account/add_funds', methods=['GET', 'POST'])
 @login_required
-def add_funds():
-    if current_user.balance <= 0:
-        flash(Markup('Your account balance is 0. Click <a href="%s">here</a> to top up!' % url_for('account.add_funds')), 'danger')
+def account_add_funds():
     payment_service = current_app.config.get('PAYMENT_SERVICE')
     if payment_service and payment_service == 'stripe':
         import stripe

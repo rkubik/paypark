@@ -1,30 +1,40 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, request, jsonify
+from importlib import import_module
 
 from .exceptions import PayParkError, PayParkNotImplementedError, PayParkHttpError
 from .commands import handle_command
 from .database import db_session
 
 
+SERVICES = {
+    'twilio': 'Twilio_Service',
+    'bulksms': 'BulkSMS_Service',
+}
+
+
 class Service(object):
-    def configure(self):
-        raise PayParkNotImplementedError
+    def __init__(self, config):
+        self.config = config
 
     def run(self):
         raise PayParkNotImplementedError
 
 
-class HTTPService(Service):
-    def __init__(self):
+class HTTP_Service(Service):
+    def __init__(self, config):
+        super(HTTP_Service, self).__init__(config)
         self.app = Flask(__name__)
+        self.app.register_error_handler(
+            PayParkHttpError,
+            self.handle_error
+        )
+        self.host = '127.0.0.1'
+        self.port = 80
 
     def run(self):
         self.app.run(host=self.host, port=self.port)
         self.app.teardown_request(self.handle_teardown_request)
-
-    def configure(self, config):
-        self.host = config.get('TWILIO_HOST')
-        self.port = config.get('TWILIO_PORT')
 
     def handle_error(self, error):
         response = jsonify(error.to_dict())
@@ -43,20 +53,15 @@ class HTTPService(Service):
         db_session.remove()
 
 
-class TwilioService(HTTPService):
-    def __init__(self):
-        super(TwilioService, self).__init__()
-        self.app.add_url_rule('/', 'api',
+class Twilio_Service(HTTP_Service):
+    def __init__(self, config):
+        super(Twilio_Service, self).__init__(config)
+        self.app.add_url_rule('/', 'Twilio Service',
             view_func=self.handle_request,
             methods=['POST']
         )
-        self.app.register_error_handler(
-            PayParkHttpError,
-            self.handle_error
-        )
-
-    def configure(self, config):
-        super(TwilioService, self).configure(config)
+        self.host = config.get('TWILIO_HOST')
+        self.port = config.get('TWILIO_PORT')
         self.mssid = config.get('TWILIO_MSSID')
 
     def handle_request(self):
@@ -64,7 +69,7 @@ class TwilioService(HTTPService):
         phone_number = self.validate_post('From')
         self.validate_post('MessagingServiceSid', self.mssid)
         try:
-            response = handle_command(phone_number, data.split(' '))
+            response = handle_command(phone_number, data)
         except PayParkError, e:
             raise PayParkHttpError(str(e), 500)
         return self.handle_response(message=response)
@@ -78,19 +83,34 @@ class TwilioService(HTTPService):
         return output + '</Response>'
 
 
-SERVICES = {
-    'twilio': TwilioService(),
-}
+class BulkSMS_Service(HTTP_Service):
+    def __init__(self, config):
+        super(BulkSMS_Service, self).__init__(config)
+        self.app.add_url_rule('/', 'BulkSMS Service',
+            view_func=self.handle_request,
+            methods=['POST']
+        )
+        self.host = config.get('BULKSMS_HOST')
+        self.port = config.get('BULKSMS_PORT')
+        self.msisdn = config.get('BULKSMS_MSISDN')
+
+    def handle_request(self):
+        data = self.validate_post('message')
+        phone_number = self.validate_post('sender')
+        self.validate_post('msisdn', self.msisdn)
+        try:
+            response = handle_command(phone_number, data)
+#            self.sms_client.send(phone_number, response)
+        except PayParkError, e:
+            raise PayParkHttpError(str(e), 500)
+        return self.handle_response(message=response)
+
+    def handle_response(self, message):
+        return message
 
 
 def get_sms_service(config):
-    '''Return SMS API service specified in configuration.
-
-    :param config: ini config parser instance
-    '''
-    service = SERVICES.get(config.get('SMS_SERVICE'))
-    if service:
-        service.configure(config)
-    else:
-        raise PayParkError('SMS Service not found: %s' % config.get('SMS_SERVICE'))
-    return service
+    return getattr(
+        import_module('paypark.sms_service'),
+        SERVICES.get(config.get('SMS_SERVICE'))
+    )(config)

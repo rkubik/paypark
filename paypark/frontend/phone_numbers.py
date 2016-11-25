@@ -2,42 +2,40 @@
 from flask import Blueprint, render_template, flash, url_for, request, redirect, current_app, Markup
 from flask_login import current_user, login_required
 
+from . import frontend
 from ..models import PhoneNumber
 from ..database import db_session
 from ..forms import AddPhoneNumberForm
 from ..pagination import Pagination
 
 
-phone_numbers = Blueprint('phone_numbers', __name__, url_prefix='/phone_numbers')
 sidebar_groups = [
     [{
-        'url': 'phone_numbers.index',
+        'url': 'frontend.phone_numbers_index',
         'name': 'Phone Numbers',
         'icon': 'phone',
     }, {
-        'url': 'phone_numbers.add',
+        'url': 'frontend.phone_numbers_add',
         'name': 'Add Phone Number',
         'icon': 'plus',
     }]
 ]
 
 
-@phone_numbers.route('/', defaults={'page': 1}, methods=['GET'])
-@phone_numbers.route('/page/<int:page>', methods=['GET'])
+@frontend.route('/phone_numbers', defaults={'page': 1}, methods=['GET'])
+@frontend.route('/phone_numbers/<int:page>', methods=['GET'])
 @login_required
-def index(page):
+def phone_numbers_index(page):
     if page < 1:
         page = 1
     per_page = current_app.config.get('PHONE_NUMBER_PER_PAGE', 10)
-    total = PhoneNumber.query.filter(
-        PhoneNumber.user_id==current_user.id
-    ).count()
     numbers = PhoneNumber.query.filter(
         PhoneNumber.user_id==current_user.id
     ).all()
-    if len(numbers) == 0:
+    total = len(numbers)
+    if total == 0:
         flash(Markup('You have no phone numbers registered. Click <a href="%s">here</a> to add one!' % url_for('phone_numbers.add')), 'danger')
-    pagination = Pagination(page, per_page, total, 'phone_numbers.index')
+    pagination = Pagination(page, per_page, total, 'frontend.phone_numbers_index')
     return render_template('phone_numbers/list.html',
         page_title='Phone Numbers',
         page_subtitle='(%d/%d)' % (page, pagination.pages),
@@ -47,9 +45,9 @@ def index(page):
     )
 
 
-@phone_numbers.route('/add', methods=['GET', 'POST'])
+@frontend.route('/phone_numbers/add', methods=['GET', 'POST'])
 @login_required
-def add():
+def phone_numbers_add():
     form = AddPhoneNumberForm(
         current_user.id,
         current_app.config.get('PHONE_NUMBER_MAX'),
@@ -65,7 +63,7 @@ def add():
         db_session.add(phone_number)
         db_session.commit()
         flash('Added phone number %s!' % phone_number.number, 'info')
-        return redirect(url_for('phone_numbers.add'))
+        return redirect(url_for('frontend.phone_numbers_add'))
     return render_template('phone_numbers/add.html',
         page_title='Add Phone Number',
         form=form,
@@ -73,16 +71,16 @@ def add():
     )
 
 
-@phone_numbers.route('/edit/<int:id>', methods=['GET', 'POST'])
+@frontend.route('/phone_numbers/edit/<int:id>', methods=['GET', 'POST'])
 @login_required
-def edit(id):
+def phone_numbers_edit(id):
     phone_number = PhoneNumber.query.filter(
         PhoneNumber.user_id==current_user.id,
         PhoneNumber.id==id
     ).first()
     if not phone_number:
         flash('Phone number not found!', 'danger')
-        return redirect(url_for('phone_numbers.index'))
+        return redirect(url_for('frontend.phone_numbers_index'))
     form = AddPhoneNumberForm(
         current_user.id,
         current_app.config.get('PHONE_NUMBER_MAX'),
@@ -96,7 +94,7 @@ def edit(id):
         db_session.add(phone_number)
         db_session.commit()
         flash('Phone number settings saved', 'info')
-        return redirect(url_for('phone_numbers.edit', id=id))
+        return redirect(url_for('frontend.phone_numbers_edit', id=id))
     return render_template('phone_numbers/edit.html',
         page_title='Edit Phone Number',
         form=form,
@@ -104,9 +102,9 @@ def edit(id):
     )
 
 
-@phone_numbers.route('/remove/<int:id>', methods=['GET'])
+@frontend.route('/phone_numbers/remove/<int:id>', methods=['GET'])
 @login_required
-def remove(id):
+def phone_numbers_remove(id):
     phone_number = PhoneNumber.query.filter(
         PhoneNumber.id==id,
         PhoneNumber.user_id==current_user.id,
@@ -117,4 +115,4 @@ def remove(id):
        db_session.commit()
     else:
         flash('Phone number not found!', 'danger')
-    return redirect(url_for('phone_numbers.index'))
+    return redirect(url_for('frontend.phone_numbers_index'))
