@@ -5,8 +5,8 @@ from flask_login import current_user, login_required
 from . import frontend
 from ..models import LicensePlate
 from ..database import db_session
-from ..forms import AddLicensePlateForm
-from ..pagination import Pagination
+from .forms import AddLicensePlateForm
+from .pagination import Pagination
 
 
 sidebar_groups = [

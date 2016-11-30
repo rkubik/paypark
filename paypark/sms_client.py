@@ -1,13 +1,7 @@
 # -*- coding: utf-8 -*-
+
 import urllib
-
 from .exceptions import PayParkError, PayParkNotImplementedError
-
-
-CLIENTS = {
-    'twilio': 'Twilio_Client',
-    'bulksms': 'BulkSMS_Client',
-}
 
 
 class Client(object):
@@ -72,9 +66,7 @@ class BulkSMS_Client(Client):
         return result[2]
 
 
-def get_sms_client(config):
-    return getattr(
-        import_module('paypark.sms_client'),
-        CLIENTS.get(config.get('SMS_CLIENT'))
-    )(config)
-
+clients = {
+    'twilio': Twilio_Client,
+    'bulksms': BulkSMS_Client,
+}

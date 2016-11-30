@@ -1,2 +1,4 @@
 *.pyc
-paypark.ini
+/production.db
+/development.db
+/testing.db

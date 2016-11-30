@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
+
 from flask import Blueprint, render_template, flash, Markup, url_for, current_app, request
 from flask_login import login_required, current_user
-
 from . import frontend
-from ..forms import ChangePasswordForm, UserSettingsForm
+from .forms import ChangePasswordForm, UserSettingsForm
 from ..format import format_currency
 from ..database import db_session
 
@@ -45,7 +45,8 @@ def account_index():
 @login_required
 def account_settings():
     form = UserSettingsForm(
-        [(int(x),'%s%s' % (current_app.config.get('CURRENCY_SYMBOL'), format_currency(x))) for x in current_app.config.get('ACCOUNT_TOP_UP').split(',')],
+        [(int(x),'%s%s' % (current_app.config.get('CURRENCY_SYMBOL'), format_currency(x))) for x in current_app.config.get('ACCOUNT_TOPUP_BALANCE', [])],
+        [(int(x),'%s%s' % (current_app.config.get('CURRENCY_SYMBOL'), format_currency(x))) for x in current_app.config.get('ACCOUNT_TOPUP_AMOUNT', [])],
         obj=current_user,
     )
     if form.validate_on_submit():
@@ -96,11 +97,11 @@ def account_add_funds():
             ),
             source='',
         )
-        return render_template('account/add_funds_stripe.html',
+        return render_template('account/funds_stripe.html',
             page_title='Add Funds',
             sidebar_groups=sidebar_groups,
         )
-    return render_template('account/add_funds_no_service.html',
+    return render_template('account/funds_no_service.html',
         page_title='Add Funds',
         sidebar_groups=sidebar_groups,
     )

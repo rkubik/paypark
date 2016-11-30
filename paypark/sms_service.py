@@ -1,16 +1,10 @@
 # -*- coding: utf-8 -*-
+
 from flask import Flask, request, jsonify
 from importlib import import_module
-
 from .exceptions import PayParkError, PayParkNotImplementedError, PayParkHttpError
 from .commands import handle_command
 from .database import db_session
-
-
-SERVICES = {
-    'twilio': 'Twilio_Service',
-    'bulksms': 'BulkSMS_Service',
-}
 
 
 class Service(object):
@@ -38,7 +32,7 @@ class HTTP_Service(Service):
 
     def handle_error(self, error):
         response = jsonify(error.to_dict())
-        response.status_code = error.status_code
+        response.code = error.code
         return response
 
     def validate_post(self, name, val=None):
@@ -109,8 +103,7 @@ class BulkSMS_Service(HTTP_Service):
         return message
 
 
-def get_sms_service(config):
-    return getattr(
-        import_module('paypark.sms_service'),
-        SERVICES.get(config.get('SMS_SERVICE'))
-    )(config)
+services = {
+    'twilio': Twilio_Service,
+    'bulksms': BulkSMS_Service,
+}

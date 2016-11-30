@@ -1,12 +1,20 @@
 # -*- coding: utf-8 -*-
-from paypark.database import init_db, db_session
+from paypark.database import init_engine, init_db, db_session
 from paypark.models import User, ZoneGroup, ZoneSchedule, Zone, PhoneNumber, LicensePlate
+from paypark.config import config
+from paypark.helpers import dict_from_class
 import argparse
 from datetime import datetime
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Database Migration Tool')
+    parser.add_argument(
+        '--config',
+        choices=['production','development','testing','default'],
+        default='default',
+        help='Configuration'
+    )
     parser.add_argument(
         '--init',
         action='store_true',
@@ -18,10 +26,10 @@ if __name__ == '__main__':
         help='Preload with demo data'
     )
     args = parser.parse_args()
-
+    cfg = dict_from_class(config[args.config])
+    init_engine(cfg.get('DATABASE_URI'))
     if args.init:
         init_db()
-
     if args.demo:
         objs = [
             User('demo', 'demo', 'demo@demo.com', 'demo', balance=10000),

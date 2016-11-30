@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
+
 from flask import Blueprint, render_template, redirect, url_for, flash
 from flask_login import logout_user, current_user
-
 from . import frontend
-from ..forms import LoginForm, RegisterForm
+from .forms import LoginForm, RegisterForm
 from ..models import User
 from ..database import db_session
 

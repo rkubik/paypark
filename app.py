@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import argparse
 
-from paypark import app
+from paypark import create_app 
 
 
 if __name__ == '__main__':
@@ -9,15 +9,9 @@ if __name__ == '__main__':
         description='PayPark Web Application'
     )
     parser.add_argument(
-        '--config',
-        type=str,
-        default='paypark.ini',
-        help='Configuration file',
-    )
-    parser.add_argument(
         '--debug',
         action='store_true',
-        help='Debugging mode'
+        help='Enable debug mode'
     )
     parser.add_argument(
         '--host',
@@ -31,8 +25,14 @@ if __name__ == '__main__':
         default=8085,
         help='Port'
     )
-
+    parser.add_argument(
+        '--config',
+        choices=['production','development','testing','default'],
+        default='default',
+        help='Configuration'
+    )
     args = parser.parse_args()
+    app = create_app(args.config)
     app.run(
         debug=args.debug,
         host=args.host,

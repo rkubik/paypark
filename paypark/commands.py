@@ -1,24 +1,20 @@
 # -*- coding: utf-8 -*-
+
 import logging
 from sqlalchemy import and_
 from functools import wraps
 from time import mktime
-
 from .database import db_session
 from .models import PhoneNumber, Zone, ParkingSession, ZoneSchedule
 from .exceptions import PayParkError
 from .format import format_currency
 from .session import current_session_by_phone, start_session, stop_session
-from .scheduler import scheduler
+
 
 logger = logging.getLogger(__name__)
 
 
 def argparser(expect=0):
-    '''Ensure command is called with correct number of args.
-
-    :param f: function callback
-    '''
     def actual_argparser(f):
         @wraps(f)
         def wrapper(self, args):

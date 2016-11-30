@@ -16,8 +16,11 @@ Debian packaging will be the preferred way of deployment. Until that is setup
 
 ### Configuration
 
-In the root directory of the project copy `paypark.ini.example` to `paypark.ini`
-and set the `SECRET_KEY`.
+Configuration is split into three different modes: Production, Testing,
+and Development. Edit `paypark/config.py` to change the database and
+other frontend/SMS settings.
+
+@todo: Document configuration options and what they do
 
 ### Running
 

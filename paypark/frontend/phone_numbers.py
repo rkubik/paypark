@@ -5,8 +5,8 @@ from flask_login import current_user, login_required
 from . import frontend
 from ..models import PhoneNumber
 from ..database import db_session
-from ..forms import AddPhoneNumberForm
-from ..pagination import Pagination
+from .forms import AddPhoneNumberForm
+from .pagination import Pagination
 
 
 sidebar_groups = [
@@ -34,7 +34,7 @@ def phone_numbers_index(page):
     ).all()
     total = len(numbers)
     if total == 0:
-        flash(Markup('You have no phone numbers registered. Click <a href="%s">here</a> to add one!' % url_for('phone_numbers.add')), 'danger')
+        flash(Markup('You have no phone numbers registered. Click <a href="%s">here</a> to add one!' % url_for('frontend.phone_numbers_add')), 'danger')
     pagination = Pagination(page, per_page, total, 'frontend.phone_numbers_index')
     return render_template('phone_numbers/list.html',
         page_title='Phone Numbers',

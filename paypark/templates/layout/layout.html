@@ -1,4 +1,3 @@
-
 <!doctype html>
 <head>
     <title>PayPark - {{ page_title }}</title>
@@ -14,13 +13,13 @@
         {% include "layout/alerts.html" %}
     {% endblock %}
     <div class="page-header">
-        <h1>{{ page_title }}{% if page_subtitle %}&nbsp;<small>{{ page_subtitle }}</small>{% endif %}</h1>
+        <h1>{% block page_title %}{{ page_title }}{% if page_subtitle %}&nbsp;<small>{{ page_subtitle }}</small>{% endif %}{% endblock %}</h1>
     </div>
     {% block template %}{% endblock %}
 </div>
 <footer class="footer">
     <div class="container">
-        <p class="text-muted">© 2016 Russ Kubik All Rights Reserved.</p>
+        <p class="text-muted">© 2016PayPark All Rights Reserved.</p>
     </div>
 </footer>
 <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>

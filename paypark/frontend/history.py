@@ -5,7 +5,7 @@ from sqlalchemy import and_
 
 from . import frontend
 from ..models import ParkingSession, PhoneNumber
-from ..pagination import Pagination
+from .pagination import Pagination
 
 
 @frontend.route('/history', defaults={'page': 1}, methods=['GET'])

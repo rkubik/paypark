@@ -14,10 +14,13 @@ class PayParkNotImplementedError(PayParkError):
 
 
 class PayParkHttpError(Exception):
-    def __init__(self, message, status_code=None):
+    def __init__(self, message, code=None):
         self.message = message
-        if status_code:
-            self.status_code = status_code
+        if code:
+            self.code = code
 
     def to_dict(self):
-        return {'error': self.message}
+        return {
+            'message': self.message,
+            'code': self.code,
+        }

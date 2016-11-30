@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
+
 from flask_wtf import Form
 import re
 from wtforms import TextField, PasswordField, validators, SelectField, HiddenField
 from flask_login import login_user, current_user
 from pycountry import subdivisions
-
-from .models import User, LicensePlate, PhoneNumber
+from ..models import User, LicensePlate, PhoneNumber
 
 
 class LoginForm(Form):
@@ -91,7 +91,7 @@ class AddLicensePlateForm(Form):
         total = LicensePlate.query.filter(
             LicensePlate.user_id==self.user_id,
         ).count()
-        if not self.id and total >= self.number_max:
+        if not self.id and self.number_max and total >= self.number_max:
             self.number.errors.append('Maximum number of license plates reached: %d' % self.number_max)
             return False
         return True
@@ -125,7 +125,7 @@ class AddPhoneNumberForm(Form):
         total = PhoneNumber.query.filter(
             PhoneNumber.user_id==self.user_id,
         ).count()
-        if not self.id and total >= self.number_max:
+        if not self.id and self.number_max and total >= self.number_max:
             self.number.errors.append('Maximum number of phone numbers reached: %d' % self.number_max)
             return False
         return True
@@ -151,10 +151,10 @@ class UserSettingsForm(Form):
         coerce=int,
     )
 
-    def __init__(self, topup_choices, *args, **kwargs):
+    def __init__(self, topup_balance, topup_amount, *args, **kwargs):
         super(UserSettingsForm, self).__init__(*args, **kwargs)
-        self.topup_balance.choices = topup_choices
-        self.topup_amount.choices = topup_choices
+        self.topup_balance.choices = topup_balance
+        self.topup_amount.choices = topup_amount
 
     def validate(self):
         rv = Form.validate(self)

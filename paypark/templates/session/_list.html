@@ -12,8 +12,8 @@
     <tbody>
         {% for session in sessions %}
         <tr>
-            <td>{{ session.date_start|date }}</td>
-            <td>{{ session.date_expiry|date }}</td>
+            <td>{{ session.date_start|datetime }}</td>
+            <td>{{ session.date_expiry|datetime }}</td>
             <td>{{ session.phone_number|phoneobj }}</td>
             <td class="center">{{ session.zone.name }}</td>
             <td>

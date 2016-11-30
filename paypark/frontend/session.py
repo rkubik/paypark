@@ -5,9 +5,8 @@ from flask_login import current_user, login_required
 from . import frontend
 from ..format import format_phone_number
 from ..session import current_sessions_by_user, stop_session, start_session
-from ..forms import ParkingSessionForm
+from .forms import ParkingSessionForm
 from ..models import Zone, PhoneNumber
-from ..scheduler import scheduler
 
 
 sidebar_groups = [
