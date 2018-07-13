@@ -42,6 +42,9 @@ class User(Base):
             self.balance,
         )
 
+    def is_authenticated(self):
+        return True
+
     def is_active(self):
         return self.active
 
