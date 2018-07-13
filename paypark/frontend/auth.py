@@ -11,7 +11,7 @@ from ..database import db_session
 @frontend.route('/auth/login', methods=['GET', 'POST'])
 def auth_login():
     form = LoginForm()
-    if current_user.is_authenticated() or form.validate_on_submit():
+    if current_user.is_authenticated or form.validate_on_submit():
         return redirect(url_for('frontend.dashboard_index'))
     return render_template('auth/login.html',
         form=form,
@@ -21,7 +21,7 @@ def auth_login():
 
 @frontend.route('/auth/register', methods=['GET', 'POST'])
 def auth_register():
-    if current_user.is_authenticated():
+    if current_user.is_authenticated:
         return redirect(url_for('frontend.dashboard_index'))
     form = RegisterForm()
     if form.validate_on_submit():

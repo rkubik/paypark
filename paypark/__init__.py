@@ -43,7 +43,7 @@ def register_extensions(app):
 
     @app.context_processor
     def inject_data():
-        if current_user.is_authenticated():
+        if current_user.is_authenticated:
             return dict(
                 auth_user=current_user,
                 num_license_plates=len(
